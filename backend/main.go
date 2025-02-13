@@ -97,7 +97,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "Mensagem enviada para o Kafka"})
 	})
 
-	// Iniciar o servidor
-	log.Println("Servidor iniciado na porta 4000...")
-	router.Run("0.0.0.0:4000")
+	log.Println("Servidor HTTPS iniciado na porta 4000...")
+	log.Fatal(router.Run(":4000"))
+
 }

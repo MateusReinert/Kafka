@@ -10,7 +10,7 @@ function ProducerPage() {
   const sendMessage = async () => {
     try {
       // Realizando a requisição POST com a mensagem
-      const response = await fetch('http://'+process.env.REACT_APP_SERVER_HOST_AND_PORT+'/send-message', {
+      const response = await fetch(process.env.REACT_APP_REST_HOST+'/send-message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

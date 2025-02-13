@@ -10,9 +10,17 @@ Send image to dockerhub
 
 # Demonstration
 
-Run docker compose
-1. See your server machine IP
+Run backend
+1. cd backend;
+2. docker-compose up
+
+Run ngrok
+1. docker run --rm --net=host -it -e NGROK_AUTHTOKEN=2t08pG5Crp5YVZ1mj9IpZw9aPBD_6PXHDnR9DgWeSS5WKdtTG -v C:\Users\Mateus\Documents\KAFKA\ngrok.yml:/var/lib/ngrok/ngrok.yml ngrok/ngrok:latest start backend frontend
+
+Run frontend
+1. Look at the ngrok URL created for the backend port (4000) (i.e.: https://6c69-45-160-36-147.ngrok-free.app)
 2. Open docker-compose.yml
-3. Change REACT_APP_SERVER_HOST_AND_PORT vairable to have your server machine ip
-4. docker-compose up
-5. Demo to the class
+3. Change REACT_APP_REST_HOST variable with that URL (i.e.: REACT_APP_REST_HOST: https://6c69-45-160-36-147.ngrok-free.app)
+4. Change REACT_APP_WS_HOST variable with that URL but replace https by wss (i.e.: REACT_APP_WS_HOST: wss://6c69-45-160-36-147.ngrok-free.app)
+5. docker-compose up
+6. Demo to the class

@@ -1,0 +1,52 @@
+version: '3'
+services:
+  zookeeper:
+    image: zookeeper:3.8
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 2
+    networks:
+      - kafka-network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092   # Alterado de localhost para kafka
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - kafka-network
+
+  backend:
+    image: mateusreinert/backend-kafka:1.0
+    container_name: backend
+    ports:
+      - "4000:4000"
+    networks:
+      - kafka-network
+
+  # ngrokservice:
+  #   image: ngrok/ngrok:latest
+  #   container_name: ngrokservice
+  #   networks:
+  #     - kafka-network
+  #   environment:
+  #     NGROK_AUTHTOKEN: 2t08pG5Crp5YVZ1mj9IpZw9aPBD_6PXHDnR9DgWeSS5WKdtTG
+  #   volumes:
+  #     - ./ngrok.yml:/var/lib/ngrok/ngrok.yml 
+  #   command: start back-end front-end
+
+networks:
+  kafka-network:
+    driver: bridge

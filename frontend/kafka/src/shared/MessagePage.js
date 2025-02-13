@@ -6,8 +6,8 @@ function MessagePage() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    const socket = new WebSocket('ws://'+process.env.REACT_APP_SERVER_HOST_AND_PORT+'/ws');
-
+    const socket = new WebSocket(process.env.REACT_APP_WS_HOST + '/ws');
+  
     socket.onmessage = (event) => {
       let messageData;
       try {
@@ -15,25 +15,25 @@ function MessagePage() {
       } catch (error) {
         messageData = event.data;
       }
-
+  
       setMessages((prevMessages) => [...prevMessages, messageData]);
     };
-
+  
     socket.onerror = (error) => {
       console.error("Erro no WebSocket:", error);
     };
-
+  
     return () => socket.close();
   }, []);
 
   const startConsumer = () => {
-    fetch('http://'+process.env.REACT_APP_SERVER_HOST_AND_PORT+'/start-consumer', { method: 'POST' })
+    fetch(process.env.REACT_APP_REST_HOST+'/start-consumer', { method: 'POST' })
       .then(() => setIsConsuming(true))
       .catch((error) => console.error('Erro ao iniciar o consumidor:', error));
   };
 
   const stopConsumer = () => {
-    fetch('http://'+process.env.REACT_APP_SERVER_HOST_AND_PORT+'/stop-consumer', { method: 'POST' })
+    fetch(process.env.REACT_APP_REST_HOST+'/stop-consumer', { method: 'POST' })
       .then(() => setIsConsuming(false))
       .catch((error) => console.error('Erro ao parar o consumidor:', error));
   };
