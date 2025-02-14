@@ -13,15 +13,13 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Definir um upgrader para WebSocket
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool { return true },
 }
 
-var clients = make(map[*websocket.Conn]bool) // Armazenar clientes conectados
+var clients = make(map[*websocket.Conn]bool)
 
 func sendMessageToClients(consumerID string, message string) {
-	// Corrigindo o uso de fmt.Sprintf
 	jsonMsg := fmt.Sprintf(`{"consumerID": "%s", "message": "%s"}`, consumerID, message)
 	for client := range clients {
 		err := client.WriteMessage(websocket.TextMessage, []byte(jsonMsg))
@@ -55,27 +53,22 @@ func handleWebSocket(c *gin.Context) {
 }
 
 func main() {
-	// Definindo o broker e o tópico Kafka
-	broker := "kafka:9092" // Kafka está no container chamado "kafka"
+	broker := "kafka:9092"
 	topic := "meu-topico"
 
-	// Inicializando o Gin e as rotas
 	router := gin.Default()
 
-	// Adicionando middleware CORS para permitir acesso do localhost:3001
 	router.Use(cors.New(cors.Config{
-		AllowAllOrigins:  true,                                                // Permitir qualquer origem
-		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"}, // Permitir métodos HTTP padrão
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "X-Requested-With"},
 		AllowCredentials: true,
 	}))
 
-	// Rota para WebSocket
 	router.GET("/ws", handleWebSocket)
 
-	// Rota para iniciar o consumo de mensagens
 	router.POST("/start-consumer", func(c *gin.Context) {
-		consumerID := fmt.Sprintf("consumer-%d", time.Now().UnixNano()) // Gera um ID único
+		consumerID := fmt.Sprintf("consumer-%d", time.Now().UnixNano())
 
 		go consumer.ReceiveMessages(broker, topic, func(msg string) {
 			sendMessageToClients(consumerID, msg)
@@ -84,7 +77,6 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "Consumer iniciado", "consumerID": consumerID})
 	})
 
-	// Rota para enviar mensagem para o Kafka
 	router.POST("/send-message", func(c *gin.Context) {
 		var msg struct {
 			Message string `json:"message"`

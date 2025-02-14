@@ -8,8 +8,8 @@ services:
     networks:
       - kafka-network
     environment:
-      REACT_APP_REST_HOST: https://6c69-45-160-36-147.ngrok-free.app
-      REACT_APP_WS_HOST: wss://6c69-45-160-36-147.ngrok-free.app
+      REACT_APP_REST_HOST: https://50e4-177-51-83-207.ngrok-free.app 
+      REACT_APP_WS_HOST: wss://50e4-177-51-83-207.ngrok-free.app 
 
 networks:
   kafka-network:
