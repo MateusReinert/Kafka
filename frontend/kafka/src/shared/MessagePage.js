@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './MessagePage.css';  // Importe o CSS aqui
+import './MessagePage.css';  
 
 function MessagePage() {
   const [isConsuming, setIsConsuming] = useState(false);
@@ -48,7 +48,6 @@ function MessagePage() {
         {messages.length > 0 ? (
           messages.map((msg, index) => (
             <li key={index}>
-              {/* Se a mensagem for um objeto, exibe o producer e a mensagem */}
               {typeof msg === 'object' ? (
                 <>
                   <strong>Producer:</strong> {msg.producer || 'Desconhecido'} <br />
